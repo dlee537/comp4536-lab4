@@ -1,7 +1,7 @@
 const http = require("http");
 const url = require('url');
 
-const BASE_URL = "/comp4537/labs/4"
+const BASE_URL = ""
 const PORT = 3000;
 
 let totalRequests = 0;
