@@ -49,9 +49,34 @@ const server = http.createServer((req, res) => {
     }
 
     if (path === `${BASE_URL}/api/definitions/` && method === "POST") {
-        retrieveJSON(200, words);
-    }
+        let body = "";
 
+        req.on("data", (chunk) => (body += chunk));
+        
+        req.on("end", () => {
+            try {
+                const newWord = JSON.parse(body);
+
+                if (!newWord.word || !newWord.definition) {
+                    retrieveJSON(400, { error: "Both 'word' and 'definition' are required" });
+                    return;
+                }
+
+                const exists = words.some((w) => w.word.toLowerCase() === newWord.word.toLowerCase());
+
+                if (exists) {
+                    retrieveJSON(409, { error: "Word already exists" });
+                    return;
+                }
+
+                words.push(newWord);
+                retrieveJSON(201, newWord);
+            } catch (err) {
+                retrieveJSON(400, { error: "Invalid JSON format" });
+            }
+        });
+        return;
+    };
 })
 
 server.listen(PORT, () => {
