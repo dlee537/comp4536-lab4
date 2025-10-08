@@ -1,7 +1,7 @@
 const http = require("http");
 const url = require('url');
 
-const BASE_URL = "/COMP4537/labs/4"
+const BASE_URL = "/comp4537/labs/4"
 const PORT = 3000;
 
 let totalRequests = 0;
@@ -98,6 +98,7 @@ const server = http.createServer((req, res) => {
         return;
     };
 
+    res.writeHead(404, { "Content-Type": "application/json" });
     retrieveJSON(404, {
         error: "Route not found.",
     });
