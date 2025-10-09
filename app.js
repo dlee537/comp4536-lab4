@@ -22,6 +22,15 @@ function setCORS(res, origin = "*") {
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 }
 
+function isValidWord(word) {
+    return typeof word === "string" && word.match(/^[A-Za-z]+$/) !== null;
+}
+
+
+function isValidDefinition(def) {
+    return typeof def === "string" && def.trim().length > 0;
+}
+
 const server = http.createServer((req, res) => {
     setCORS(res);
 
@@ -75,6 +84,18 @@ const server = http.createServer((req, res) => {
                 if (!newWord.word || !newWord.definition) {
                     return sendJSON(res, 400, {
                         error: "Both 'word' and 'definition' are required",
+                    });
+                }
+
+                if (!isValidWord(newWord.word)) {
+                    return sendJSON(res, 400, {
+                        error: "'word' must be a non-empty string with letters only",
+                    });
+                }
+
+                if (!isValidDefinition(newWord.definition)) {
+                    return sendJSON(res, 400, {
+                        error: "'definition' must be a non-empty string",
                     });
                 }
 
